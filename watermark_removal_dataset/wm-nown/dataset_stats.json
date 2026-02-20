@@ -1,0 +1,47 @@
+{
+  "dataset_info": {
+    "creation_date": "2026-02-20T20:53:45.809787",
+    "total_pairs": 802,
+    "splits": {
+      "train": 641,
+      "valid": 80,
+      "test": 81
+    }
+  },
+  "configuration": {
+    "source_dirs": {
+      "watermarked": "watermarked",
+      "nonwatermarked": "nonwatermarked"
+    },
+    "output_dir": "wm-nown",
+    "target_size": [
+      512,
+      512
+    ],
+    "split_ratios": {
+      "train": 0.8,
+      "valid": 0.1,
+      "test": 0.1
+    },
+    "image_format": "jpg",
+    "jpeg_quality": 95,
+    "random_seed": 42,
+    "resize_method": "pad",
+    "padding_color": [
+      0,
+      0,
+      0
+    ]
+  },
+  "processing_stats": {
+    "corrupted_files": 0,
+    "missing_pairs": 0,
+    "duplicates_found": 8,
+    "processing_errors": 0
+  },
+  "issues": {
+    "corrupted_files": [],
+    "missing_pairs": [],
+    "processing_errors": []
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Watermark Removal Image Pairs Dataset",
+  "id": "quanttanzeelahmad/watermark-removal-image-pairs",
+  "licenses": [
+    {
+      "name": "GPL-3.0"
+    }
+  ],
+  "keywords": [
+    "computer vision",
+    "image processing",
+    "deep learning",
+    "autoencoder",
+    "watermark removal",
+    "image restoration",
+    "image pairs",
+    "tensorflow",
+    "keras",
+    "convolutional neural network"
+  ],
+  "subtitle": "Paired watermarked and clean images for training watermark removal models",
+  "description": "# Watermark Removal Image Pairs Dataset\n\n## Overview\n\nThis dataset contains **802 paired images** for training deep learning models to remove watermarks from images. Each pair consists of:\n- A watermarked image\n- The corresponding clean (watermark-free) image\n\nAll images have been preprocessed and resized to **512x512 pixels** for efficient training.\n\n## Dataset Structure\n\n```\nwm-nown/\n├── train/              641 pairs (80%)\n│   ├── watermark/      Watermarked training images\n│   └── no-watermark/   Clean training images\n├── valid/              80 pairs (10%)\n│   ├── watermark/      Watermarked validation images\n│   └── no-watermark/   Clean validation images\n└── test/               81 pairs (10%)\n    ├── watermark/      Watermarked test images\n    └── no-watermark/   Clean test images\n```\n\n## Dataset Statistics\n\n- **Total pairs**: 802\n- **Training set**: 641 pairs (79.9%)\n- **Validation set**: 80 pairs (10.0%)\n- **Test set**: 81 pairs (10.1%)\n- **Image dimensions**: 512×512 pixels\n- **Format**: JPEG (quality 95)\n- **Total size**: ~98 MB\n- **Color space**: RGB\n\n## Use Cases\n\n1. **Watermark Removal**: Train models to remove watermarks from images\n2. **Image Restoration**: Learn image-to-image translation tasks\n3. **Convolutional Autoencoder**: Practice building encoder-decoder architectures\n4. **U-Net Training**: Experiment with skip connections for better results\n5. **Perceptual Loss**: Implement VGG-based loss functions\n6. **GAN Training**: Use for Pix2Pix or similar architectures\n\n## Quick Start\n\n### Load Dataset in Kaggle Notebook\n\n```python\nimport os\nimport tensorflow as tf\nfrom pathlib import Path\n\n# Dataset path in Kaggle\nDATASET_PATH = '/kaggle/input/watermark-removal-image-pairs/wm-nown'\n\n# Load images\ntrain_watermark_dir = Path(DATASET_PATH) / 'train' / 'watermark'\ntrain_clean_dir = Path(DATASET_PATH) / 'train' / 'no-watermark'\n\nprint(f\"Training watermarked images: {len(list(train_watermark_dir.glob('*.jpg')))}\")\nprint(f\"Training clean images: {len(list(train_clean_dir.glob('*.jpg')))}\")\n```\n\n### Simple Data Loader\n\n```python\ndef load_image_pair(watermark_path, clean_path):\n    # Load images\n    wm_img = tf.io.read_file(watermark_path)\n    wm_img = tf.image.decode_jpeg(wm_img, channels=3)\n    wm_img = tf.cast(wm_img, tf.float32) / 255.0\n    \n    clean_img = tf.io.read_file(clean_path)\n    clean_img = tf.image.decode_jpeg(clean_img, channels=3)\n    clean_img = tf.cast(clean_img, tf.float32) / 255.0\n    \n    return wm_img, clean_img\n\n# Create dataset\nwatermark_paths = sorted([str(p) for p in train_watermark_dir.glob('*.jpg')])\nclean_paths = sorted([str(p) for p in train_clean_dir.glob('*.jpg')])\n\ntrain_ds = tf.data.Dataset.from_tensor_slices((watermark_paths, clean_paths))\ntrain_ds = train_ds.map(load_image_pair, num_parallel_calls=tf.data.AUTOTUNE)\ntrain_ds = train_ds.batch(16).prefetch(tf.data.AUTOTUNE)\n```\n\n## Example Model Architecture\n\n```python\nfrom tensorflow.keras import layers, models\n\ndef build_autoencoder():\n    inputs = layers.Input(shape=(512, 512, 3))\n    \n    # Encoder\n    x = layers.Conv2D(64, 3, activation='relu', padding='same')(inputs)\n    x = layers.MaxPooling2D(2, padding='same')(x)\n    x = layers.Conv2D(128, 3, activation='relu', padding='same')(x)\n    x = layers.MaxPooling2D(2, padding='same')(x)\n    x = layers.Conv2D(256, 3, activation='relu', padding='same')(x)\n    x = layers.MaxPooling2D(2, padding='same')(x)\n    \n    # Bottleneck\n    x = layers.Conv2D(512, 3, activation='relu', padding='same')(x)\n    \n    # Decoder\n    x = layers.Conv2DTranspose(256, 2, strides=2, padding='same')(x)\n    x = layers.Conv2D(256, 3, activation='relu', padding='same')(x)\n    x = layers.Conv2DTranspose(128, 2, strides=2, padding='same')(x)\n    x = layers.Conv2D(128, 3, activation='relu', padding='same')(x)\n    x = layers.Conv2DTranspose(64, 2, strides=2, padding='same')(x)\n    x = layers.Conv2D(64, 3, activation='relu', padding='same')(x)\n    \n    outputs = layers.Conv2D(3, 3, activation='sigmoid', padding='same')(x)\n    \n    model = models.Model(inputs, outputs)\n    model.compile(optimizer='adam', loss='mse', metrics=['mae'])\n    \n    return model\n\nmodel = build_autoencoder()\nmodel.fit(train_ds, validation_data=valid_ds, epochs=50)\n```\n\n## Data Preprocessing\n\nAll images in this dataset have been:\n- Validated for integrity (0 corrupted files)\n- Resized to 512×512 pixels with padding to maintain aspect ratio\n- Saved as high-quality JPEG (quality 95)\n- Organized in train/valid/test splits\n- Named sequentially (image_0001.jpg, image_0002.jpg, etc.)\n\n## Metadata Files\n\nThe dataset includes CSV files mapping original filenames to processed filenames:\n- `train_pairs.csv`\n- `valid_pairs.csv`\n- `test_pairs.csv`\n\nAnd a JSON file with complete statistics:\n- `dataset_stats.json`\n\n## Recommended Training Configuration\n\n- **Batch size**: 8-16 (depending on GPU memory)\n- **Learning rate**: 0.001 (with ReduceLROnPlateau)\n- **Loss function**: MSE or MAE (try Perceptual Loss for better quality)\n- **Epochs**: 50-100 (use EarlyStopping)\n- **Optimizer**: Adam\n- **Augmentation**: Random flips, brightness, contrast adjustments\n\n## Data Augmentation\n\nRecommended augmentations (apply to both images):\n```python\ndef augment(wm_img, clean_img):\n    # Random horizontal flip\n    if tf.random.uniform(()) > 0.5:\n        wm_img = tf.image.flip_left_right(wm_img)\n        clean_img = tf.image.flip_left_right(clean_img)\n    \n    # Random brightness\n    delta = tf.random.uniform((), -0.1, 0.1)\n    wm_img = tf.image.adjust_brightness(wm_img, delta)\n    clean_img = tf.image.adjust_brightness(clean_img, delta)\n    \n    return wm_img, clean_img\n```\n\n## Expected Results\n\nWith a basic autoencoder (26M parameters):\n- **Training time**: 1-2 hours on Kaggle GPU\n- **Validation MSE**: 0.005-0.015\n- **Visual quality**: Good for simple watermarks\n\nFor better results:\n- Use U-Net with skip connections\n- Implement perceptual loss (VGG-based)\n- Train for 100+ epochs\n- Try Pix2Pix GAN architecture\n\n## License\n\nGPL-3.0 - See LICENSE file for details\n\n## Citation\n\nIf you use this dataset in your research or projects, please cite:\n\n```\nWatermark Removal Image Pairs Dataset\nhttps://www.kaggle.com/datasets/quanttanzeelahmad/watermark-removal-image-pairs\n```\n\n## Acknowledgments\n\nThis dataset was prepared using automated preprocessing scripts with the following steps:\n1. Image validation and integrity checking\n2. Duplicate detection and resolution\n3. Resizing with aspect ratio preservation\n4. Random stratified splitting (80/10/10)\n5. Quality verification\n\n## Version History\n\n**v1.0** (2026-02-20)\n- Initial release\n- 802 image pairs\n- 512×512 resolution\n- Train/valid/test splits\n- Metadata files included",
+  "resources": [
+    {
+      "path": "wm-nown/train/watermark",
+      "description": "Training set - watermarked images (641 images)"
+    },
+    {
+      "path": "wm-nown/train/no-watermark",
+      "description": "Training set - clean images (641 images)"
+    },
+    {
+      "path": "wm-nown/valid/watermark",
+      "description": "Validation set - watermarked images (80 images)"
+    },
+    {
+      "path": "wm-nown/valid/no-watermark",
+      "description": "Validation set - clean images (80 images)"
+    },
+    {
+      "path": "wm-nown/test/watermark",
+      "description": "Test set - watermarked images (81 images)"
+    },
+    {
+      "path": "wm-nown/test/no-watermark",
+      "description": "Test set - clean images (81 images)"
+    },
+    {
+      "path": "wm-nown/train_pairs.csv",
+      "description": "Training set metadata with file mappings"
+    },
+    {
+      "path": "wm-nown/valid_pairs.csv",
+      "description": "Validation set metadata with file mappings"
+    },
+    {
+      "path": "wm-nown/test_pairs.csv",
+      "description": "Test set metadata with file mappings"
+    },
+    {
+      "path": "wm-nown/dataset_stats.json",
+      "description": "Complete dataset statistics and configuration"
+    }
+  ]
+}
