@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "image-logo-remover"
+version = "1.0.0"
+description = "Remove watermarks and logos from images using automatic detection and OpenCV inpainting"
+readme = "README.md"
+license = {text = "GPL-3.0"}
+requires-python = ">=3.9"
+authors = [
+    {name = "CodewithanZeeL"}
+]
+keywords = [
+    "watermark removal",
+    "logo removal", 
+    "image processing",
+    "inpainting",
+    "opencv",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Graphics :: Editors",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
+
+dependencies = [
+    "opencv-python>=4.9.0",
+    "numpy>=1.26.0",
+    "pillow>=10.0.0",
+    "tqdm>=4.66.0",
+]
+
+[project.scripts]
+logo-remover = "cli:main"
+
+[project.urls]
+Homepage = "https://github.com/CodewithanZeeL/image-logo-remover"
+Repository = "https://github.com/CodewithanZeeL/image-logo-remover.git"
+Issues = "https://github.com/CodewithanZeeL/image-logo-remover/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["*.py"]
+
+[tool.setuptools.package-data]
+"" = ["*.pth"]
+
+[tool.black]
+line-length = 88
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "W", "I", "N", "UP", "B"]
