@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "image-logo-remover"
-version = "1.0.0"
+name = "rmlogo"
+version = "2.1.0"
 description = "Remove watermarks and logos from images using automatic detection and OpenCV inpainting"
 readme = "README.md"
 license = {text = "GPL-3.0"}
@@ -43,7 +43,7 @@ dependencies = [
 ]
 
 [project.scripts]
-logo-remover = "cli:main"
+rmlogo = "rmlogo.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/CodewithanZeeL/image-logo-remover"
@@ -52,10 +52,10 @@ Issues = "https://github.com/CodewithanZeeL/image-logo-remover/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["*.py"]
+include = ["rmlogo", "rmlogo.*"]
 
 [tool.setuptools.package-data]
-"" = ["*.pth"]
+rmlogo = ["*.pth"]
 
 [tool.black]
 line-length = 88
