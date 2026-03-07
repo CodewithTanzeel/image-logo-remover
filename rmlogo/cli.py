@@ -46,7 +46,7 @@ from .auto_mask import generate_mask, visualize_mask, HintType
 from .inference import remove_logo
 
 
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 
 HINT_CHOICES = [
     "auto",
