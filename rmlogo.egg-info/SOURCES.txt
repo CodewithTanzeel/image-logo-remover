@@ -1,6 +1,8 @@
 LICENSE
+MANIFEST.in
 README.md
 pyproject.toml
+requirements.txt
 rmlogo/__init__.py
 rmlogo/auto_mask.py
 rmlogo/cli.py
@@ -11,3 +13,6 @@ rmlogo.egg-info/dependency_links.txt
 rmlogo.egg-info/entry_points.txt
 rmlogo.egg-info/requires.txt
 rmlogo.egg-info/top_level.txt
+tests/test_auto_mask.py
+tests/test_gemini_parser.py
+tests/test_inference.py

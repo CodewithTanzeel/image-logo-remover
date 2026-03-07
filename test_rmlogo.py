@@ -121,11 +121,11 @@ def test_version():
 
     from rmlogo import __version__
 
-    if __version__ == "2.1.0":
+    if __version__ == "0.0.1":
         print(f"[PASS] Version is correct: {__version__}")
         return True
     else:
-        print(f"[FAIL] Version mismatch: got {__version__}, expected 2.1.0")
+        print(f"[FAIL] Version mismatch: got {__version__}, expected 0.0.1")
         return False
 
 

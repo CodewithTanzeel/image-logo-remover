@@ -25,7 +25,13 @@ A professional, zero-friction CLI tool to remove watermarks and logos from image
 
 ## Installation
 
-### From GitHub (Recommended)
+### From PyPI (Recommended)
+
+```bash
+pip install rmlogo
+```
+
+### From GitHub
 
 ```bash
 pip install git+https://github.com/CodewithanZeeL/image-logo-remover.git
@@ -39,13 +45,6 @@ cd image-logo-remover
 pip install -e .
 ```
 
-### Minimal Install (Direct Python)
-
-```bash
-pip install -r requirements.txt
-python cli.py input.jpg
-```
-
 ---
 
 ## Quick Start
@@ -54,47 +53,47 @@ python cli.py input.jpg
 
 ```bash
 # Process with interactive output path prompt
-logo-remover photo.jpg
+rmlogo photo.jpg
 # → "Save cleaned image to: [./cleaned_photo.jpg]"
 # → Press Enter to accept default, or type custom path
 
-# Specify output explicitly (no prompt)
-logo-remover photo.jpg -o result.png --no-ask
+# Specify output explicitly
+rmlogo photo.jpg -o result.png
 
 # With position hint
-logo-remover photo.jpg --hint bottom-right
+rmlogo photo.jpg --hint bottom-right
 
 # Debug mode - see detected mask
-logo-remover photo.jpg --save-mask debug_mask.png -v
+rmlogo photo.jpg --save-mask debug_mask.png -v
 ```
 
 ### Batch Processing
 
 ```bash
 # Process all images in folder (creates timestamped output directory)
-logo-remover --batch ./photos/
+rmlogo --batch ./photos/
 # → Output: ./cleaned_images_20250224_153042/
 
 # Only process JPEGs
-logo-remover --batch ./photos/ --pattern "*.jpg"
+rmlogo --batch ./photos/ --pattern "*.jpg"
 
 # Multiple patterns
-logo-remover --batch ./photos/ --pattern "*.jpg,*.png"
+rmlogo --batch ./photos/ --pattern "*.jpg,*.png"
 
 # Use specific number of threads (default: auto-detect)
-logo-remover --batch ./photos/ --threads 4
+rmlogo --batch ./photos/ --threads 4
 
 # Verbose output with detailed progress
-logo-remover --batch ./photos/ -v
+rmlogo --batch ./photos/ -v
 
 # Quiet mode (minimal output)
-logo-remover --batch ./photos/ -q
+rmlogo --batch ./photos/ -q
 
 # Preview before processing (dry-run)
-logo-remover --batch ./photos/ --dry-run
+rmlogo --batch ./photos/ --dry-run
 
 # Save processing log as JSON
-logo-remover --batch ./photos/ --json
+rmlogo --batch ./photos/ --json
 ```
 
 ### Advanced: Piping Support
@@ -103,22 +102,22 @@ Use with Unix `find`, PowerShell, or WSL for powerful filtering:
 
 ```bash
 # UNIX/Linux - Process only JPEGs modified in last 24 hours
-find /path/to/photos -name "*.jpg" -mtime -1 | logo-remover --batch -
+find /path/to/photos -name "*.jpg" -mtime -1 | rmlogo --batch -
 
 # UNIX/Linux - Process files over 2MB
-find /path/to/photos -name "*.jpg" -size +2M | logo-remover --batch -
+find /path/to/photos -name "*.jpg" -size +2M | rmlogo --batch -
 
 # PowerShell - Process files from current directory
-Get-ChildItem *.jpg | Select-Object FullName | logo-remover --batch -
+Get-ChildItem *.jpg | Select-Object FullName | rmlogo --batch -
 
 # PowerShell - Process files modified today
-Get-ChildItem *.jpg | Where-Object { $_.LastWriteTime -gt [datetime]::Today } | logo-remover --batch -
+Get-ChildItem *.jpg | Where-Object { $_.LastWriteTime -gt [datetime]::Today } | rmlogo --batch -
 
 # WSL/Linux with piping to other tools
-ls /mnt/c/Photos/*.jpg | logo-remover --batch - --json | jq '.summary'
+ls /mnt/c/Photos/*.jpg | rmlogo --batch - --json | jq '.summary'
 
 # Combine with other image tools
-find . -name "*.jpg" | logo-remover --batch - -q --threads 6
+find . -name "*.jpg" | rmlogo --batch - -q --threads 6
 ```
 
 ---
@@ -128,11 +127,11 @@ find . -name "*.jpg" | logo-remover --batch - -q --threads 6
 ### Command-Line Syntax
 
 ```
-usage: logo-remover [-h] [-o PATH] [--no-ask] [--hint HINT] [--save-mask PATH]
-                    [--batch PATH] [--pattern PATTERNS] [--threads N]
-                    [--output-dir PATH] [--dry-run]
-                    [-q] [-v] [--json] [--version]
-                    [INPUT]
+usage: rmlogo [-h] [-o PATH] [--hint HINT] [--bgrm TEXT] [--save-mask PATH]
+              [--batch PATH] [--pattern PATTERNS] [--threads N]
+              [--output-dir PATH] [--dry-run]
+              [-q] [-v] [--json] [--version]
+              [INPUT]
 
 Remove watermarks/logos from images using automatic detection.
 
@@ -146,11 +145,11 @@ optional arguments:
 Single File Options:
   -o PATH, --output PATH
                         Output path (single mode only)
-  --no-ask              Use default output path without prompting
 
 Common Options:
   --hint HINT           Watermark position: auto, bottom-right, bottom-left,
                         top-right, top-left, center, full (default: auto)
+  --bgrm TEXT           Paste Gemini AI response here to extract position hint
   --save-mask PATH      Save detected mask visualization to file
 
 Batch Mode Options:
@@ -321,20 +320,20 @@ Thread count auto-detection formula: `min(CPU_cores // 2, 8)`
 
 ```bash
 # Process a day's batch of photos
-logo-remover --batch ./photo_shoot_20250224/ --threads 8 -v
+rmlogo --batch ./photo_shoot_20250224/ --threads 8 -v
 
 # Archive organized by date
-logo-remover --batch ./photos_2025/ --output-dir ./cleaned_archive_2025/
+rmlogo --batch ./photos_2025/ --output-dir ./cleaned_archive_2025/
 ```
 
 ### Batch Processing with Verification
 
 ```bash
 # First: preview
-logo-remover --batch ./images/ --dry-run
+rmlogo --batch ./images/ --dry-run
 
 # Then: process and save JSON for QA
-logo-remover --batch ./images/ --json
+rmlogo --batch ./images/ --json
 
 # Analyze results
 cat ./cleaned_images_*/processing_log.json | jq '.summary'
@@ -344,10 +343,10 @@ cat ./cleaned_images_*/processing_log.json | jq '.summary'
 
 ```bash
 # Send only successful results to another process
-logo-remover --batch ./photos/ --json | jq -r '.results[] | select(.status=="success") | .output'
+rmlogo --batch ./photos/ --json | jq -r '.results[] | select(.status=="success") | .output'
 
 # Process and send to cloud storage
-find ./photos -name "*.jpg" | logo-remover --batch - --json | \
+find ./photos -name "*.jpg" | rmlogo --batch - --json | \
   jq -r '.results[] | .output' | xargs -I {} aws s3 cp {} s3://my-bucket/
 ```
 
@@ -365,7 +364,7 @@ OUTPUT_DIR="${OUTPUT_BASE}_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$OUTPUT_DIR"
 
 # Process
-logo-remover --batch "$INPUT_DIR" --output-dir "$OUTPUT_DIR" --json
+rmlogo --batch "$INPUT_DIR" --output-dir "$OUTPUT_DIR" --json
 
 # Check results
 RESULTS="${OUTPUT_DIR}/processing_log.json"
@@ -384,17 +383,17 @@ echo "Results in: $OUTPUT_DIR"
 
 1. Try specifying a position hint:
    ```bash
-   logo-remover photo.jpg --hint bottom-right
+   rmlogo photo.jpg --hint bottom-right
    ```
 
 2. Save the mask to inspect:
    ```bash
-   logo-remover photo.jpg --save-mask debug.png -v
+   rmlogo photo.jpg --save-mask debug.png -v
    ```
 
 3. Check if watermark is very faint or in center:
    ```bash
-   logo-remover photo.jpg --hint center
+   rmlogo photo.jpg --hint center
    ```
 
 ### Slow Performance
@@ -407,12 +406,12 @@ echo "Results in: $OUTPUT_DIR"
 
 2. Manually specify thread count:
    ```bash
-   logo-remover --batch ./photos/ --threads 4
+   rmlogo --batch ./photos/ --threads 4
    ```
 
 3. Use quiet mode to reduce I/O:
    ```bash
-   logo-remover --batch ./photos/ -q
+   rmlogo --batch ./photos/ -q
    ```
 
 ### Permission Errors
@@ -429,10 +428,12 @@ chmod +x cli.py
 
 ```
 image-logo-remover/
-├── cli.py              # Main CLI entry point
-├── inference.py        # Core inpainting logic
-├── auto_mask.py        # Automatic watermark detection
-├── requirements.txt    # Dependencies
+├── rmlogo/             # Main package directory
+│   ├── __init__.py     # Package initialization
+│   ├── cli.py          # Command-line interface entry point
+│   ├── auto_mask.py    # Automatic watermark detection
+│   └── inference.py    # OpenCV inpainting logic
+├── tests/              # Test suite with pytest
 ├── pyproject.toml      # Package configuration
 ├── README.md           # This file
 └── LICENSE             # GPL-3.0 license

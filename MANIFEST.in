@@ -1,0 +1,18 @@
+include README.md
+include LICENSE
+include requirements.txt
+recursive-include rmlogo *.py
+
+exclude wheels/*
+exclude *.zip
+exclude nul
+exclude fine_tuned_watermark_remover.pth
+recursive-exclude watermark_removal_dataset *
+recursive-exclude cleaned_images_* *
+recursive-exclude test_batch *
+recursive-exclude rmlogo_test *
+recursive-exclude __pycache__ *
+exclude test_cli_mask*.png
+exclude test_result*.png
+exclude test_inference.py
+exclude test_rmlogo.py

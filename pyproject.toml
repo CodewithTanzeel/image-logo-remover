@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rmlogo"
-version = "2.1.0"
+version = "0.0.1"
 description = "Remove watermarks and logos from images using automatic detection and OpenCV inpainting"
 readme = "README.md"
-license = {text = "GPL-3.0"}
+license = "GPL-3.0"
 requires-python = ">=3.9"
 authors = [
     {name = "CodewithanZeeL"}
@@ -20,17 +20,17 @@ keywords = [
     "opencv",
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 2 - Pre-Alpha",
     "Environment :: Console",
     "Intended Audience :: End Users/Desktop",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Multimedia :: Graphics :: Editors",
     "Topic :: Scientific/Engineering :: Image Processing",
 ]
@@ -45,10 +45,14 @@ dependencies = [
 [project.scripts]
 rmlogo = "rmlogo.cli:main"
 
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pytest-cov"]
+
 [project.urls]
 Homepage = "https://github.com/CodewithanZeeL/image-logo-remover"
 Repository = "https://github.com/CodewithanZeeL/image-logo-remover.git"
 Issues = "https://github.com/CodewithanZeeL/image-logo-remover/issues"
+Changelog = "https://github.com/CodewithanZeeL/image-logo-remover/releases"
 
 [tool.setuptools.packages.find]
 where = ["."]

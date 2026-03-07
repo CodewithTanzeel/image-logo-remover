@@ -25,8 +25,8 @@ from pathlib import Path
 
 # Configuration
 PROJECT_ROOT = Path(__file__).parent
-ZIP_NAME = "rmlogo-2.1.0-dist.zip"
-DIST_DIR = "rmlogo-2.1.0-dist"
+ZIP_NAME = "rmlogo-0.0.1-dist.zip"
+DIST_DIR = "rmlogo-0.0.1-dist"
 
 # Files and directories to include
 INCLUDE_FILES = [
