@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: rmlogo
-Version: 0.0.1
+Version: 0.0.3
 Summary: Remove watermarks and logos from images using automatic detection and OpenCV inpainting
 Author: CodewithanZeeL
 License-Expression: GPL-3.0
@@ -34,12 +34,15 @@ Requires-Dist: pytest>=7.0; extra == "dev"
 Requires-Dist: pytest-cov; extra == "dev"
 Dynamic: license-file
 
-# Image Logo Remover - CLI Tool
+# rmlogo - Watermark & Logo Remover
 
-A professional, zero-friction CLI tool to remove watermarks and logos from images. Uses automatic watermark detection and OpenCV inpainting — **no GPU required, no model downloads needed**.
+A fast, easy-to-use CLI tool to remove watermarks and logos from images. **One command, instant results** — no GPU, no AI models, no complicated setup.
 
+[![PyPI version](https://img.shields.io/pypi/v/rmlogo.svg)](https://pypi.org/project/rmlogo/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+
+**Live on PyPI:** https://pypi.org/project/rmlogo/
 
 ---
 
@@ -83,77 +86,43 @@ pip install -e .
 
 ---
 
-## Quick Start
+## Quick Start (30 seconds)
 
-### Single File Mode
-
+### Step 1: Install
 ```bash
-# Process with interactive output path prompt
-rmlogo photo.jpg
-# → "Save cleaned image to: [./cleaned_photo.jpg]"
-# → Press Enter to accept default, or type custom path
-
-# Specify output explicitly
-rmlogo photo.jpg -o result.png
-
-# With position hint
-rmlogo photo.jpg --hint bottom-right
-
-# Debug mode - see detected mask
-rmlogo photo.jpg --save-mask debug_mask.png -v
+pip install rmlogo
 ```
 
-### Batch Processing
-
+### Step 2: Remove watermark
 ```bash
-# Process all images in folder (creates timestamped output directory)
+rmlogo photo.jpg -o cleaned.jpg
+```
+
+That's it! Your cleaned image is saved as `cleaned.jpg`.
+
+---
+
+## More Examples
+
+### Batch process entire folder
+```bash
 rmlogo --batch ./photos/
-# → Output: ./cleaned_images_20250224_153042/
-
-# Only process JPEGs
-rmlogo --batch ./photos/ --pattern "*.jpg"
-
-# Multiple patterns
-rmlogo --batch ./photos/ --pattern "*.jpg,*.png"
-
-# Use specific number of threads (default: auto-detect)
-rmlogo --batch ./photos/ --threads 4
-
-# Verbose output with detailed progress
-rmlogo --batch ./photos/ -v
-
-# Quiet mode (minimal output)
-rmlogo --batch ./photos/ -q
-
-# Preview before processing (dry-run)
-rmlogo --batch ./photos/ --dry-run
-
-# Save processing log as JSON
-rmlogo --batch ./photos/ --json
+# Output: ./cleaned_images_20250307_154230/
 ```
 
-### Advanced: Piping Support
-
-Use with Unix `find`, PowerShell, or WSL for powerful filtering:
-
+### Specify watermark location
 ```bash
-# UNIX/Linux - Process only JPEGs modified in last 24 hours
-find /path/to/photos -name "*.jpg" -mtime -1 | rmlogo --batch -
+rmlogo photo.jpg -o cleaned.jpg --hint bottom-right
+```
 
-# UNIX/Linux - Process files over 2MB
-find /path/to/photos -name "*.jpg" -size +2M | rmlogo --batch -
+### Quiet mode (no progress bars)
+```bash
+rmlogo --batch ./photos/ -q
+```
 
-# PowerShell - Process files from current directory
-Get-ChildItem *.jpg | Select-Object FullName | rmlogo --batch -
-
-# PowerShell - Process files modified today
-Get-ChildItem *.jpg | Where-Object { $_.LastWriteTime -gt [datetime]::Today } | rmlogo --batch -
-
-# WSL/Linux with piping to other tools
-ls /mnt/c/Photos/*.jpg | rmlogo --batch - --json | jq '.summary'
-
-# Combine with other image tools
-find . -name "*.jpg" | rmlogo --batch - -q --threads 6
+### Verbose mode (detailed output)
+```bash
+rmlogo photo.jpg -v
 ```
 
 ---
