@@ -411,9 +411,8 @@ def process_single(
     # Determine output path
     if output_path is None:
         output_path = default_output_path(input_path)
-
-    # Always ask user for output path (no --no-ask bypass)
-    output_path = prompt_output_path(output_path)
+        # Only prompt if output_path was not explicitly provided via -o
+        output_path = prompt_output_path(output_path)
 
     # Process
     success, metadata = process_image(
