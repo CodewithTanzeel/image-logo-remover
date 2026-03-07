@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rmlogo"
-version = "0.0.1"
+version = "0.0.2"
 description = "Remove watermarks and logos from images using automatic detection and OpenCV inpainting"
 readme = "README.md"
 license = "GPL-3.0"
